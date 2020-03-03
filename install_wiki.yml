@@ -144,7 +144,7 @@
         state: link
         owner: root
         group: root
-        mode: '0755'
+        mode: '0644'
 
     - name: Rename symbolic link
       command: mv /var/www/html/nginx /var/www/html/wiki
