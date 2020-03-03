@@ -154,7 +154,7 @@
         dest: /appli/projects/md1/nginx/LocalSettings.php
 
     - name: Does the database exist?
-      command: mysql -u root wiki -e "SELECT ID FROM wiki.users LIMIT 1;"
+      command: mysql -u root wiki -e "SELECT ID FROM mysql.users LIMIT 1;"
       register: db_exist
       ignore_errors: true
 
