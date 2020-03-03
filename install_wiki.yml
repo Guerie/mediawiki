@@ -1,5 +1,5 @@
 ---
-
+  tasks:
 # TOOLS
     - name: Install required tools
       apt:
