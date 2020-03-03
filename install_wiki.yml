@@ -115,19 +115,31 @@
       notify: restart nginx
 
   # MediaWiki
+
+    - name: Create LIVR folder
+      file:
+        dest: /appli/wikidevops/LIVR
+        state: directory
+
     - name: Unzip MediaWiki
       unarchive:
         src: files/md1_01.00.00_data.tar.gz
-        dest: appli/wikidevops/LIVR
-        creates: appli/wikidevops/LIVR/wiki_devops/maintenance/install.php
+        dest: /appli/wikidevops/LIVR
+        creates: /appli/wikidevops/LIVR/wiki_devops/maintenance/install.php
+
     - name: Create project folder
       file:
         dest: /var/www/html/wiki
         state: directory
 
+    - name: Create root server folder
+      file:
+        dest: /appli/projects/md1/nginx
+        state: directory
+
     - name: Create a symbolic link
       file:
-        src: appli/projects/md1/nginx
+        src: /appli/projects/md1/nginx
         dest: /var/www/html
         state: link
 
@@ -135,7 +147,7 @@
       command: mv /var/www/html/nginx /var/www/html/wiki
 
     - name: Copy MediaWiki files
-      command: cp -a appli/wikidevops/LIVR/wiki_devops. /var/www/html/wiki
+      command: cp -a /appli/wikidevops/LIVR/wiki_devops. /var/www/html/wiki
       args:
         creates: /var/www/html/wiki/maintenance/install.php
 
@@ -168,7 +180,7 @@
 
     - name: Import MediaWiki DB
       mysql_db:
-        target: appli/wikidevops/LIVR/backup.sql
+        target: /appli/wikidevops/LIVR/backup.sql
         state: import
         name: mediawiki
       when: db_exist.rc > 0
@@ -178,7 +190,7 @@
       service:
         name: nginx
         state: restarted
-    
+
     - name: restart mysql
       service:
         name: mysql
