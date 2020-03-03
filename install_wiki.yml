@@ -142,6 +142,9 @@
         src: /appli/projects/md1/nginx
         dest: /var/www/html
         state: link
+        owner: root
+        group: root
+        mode: '0755'
 
     - name: Rename symbolic link
       command: mv /var/www/html/nginx /var/www/html/wiki
