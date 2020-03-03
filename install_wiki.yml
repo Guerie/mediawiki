@@ -132,7 +132,7 @@
         dest: /appli/projects/md1/nginx
         state: directory
 
-      - name: Copy MediaWiki files
+    - name: Copy MediaWiki files
       command: cp -a /appli/wikidevops/LIVR/wiki_devops/. /appli/projects/md1/nginx
       args:
         creates: /appli/projects/md1/nginx/maintenance/install.php
