@@ -1,5 +1,7 @@
 ---
 
+  hosts: group_mediawiki
+  become: yes
   tasks:
 
 # TOOLS
