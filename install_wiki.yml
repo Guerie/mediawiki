@@ -24,10 +24,10 @@
         name: "{{ item }}"
         state: present
       loop:
-        - php
-        - php-fpm
-        - php-mysql
-        - php-xml
+        - php5.6
+        - php5.6-fpm
+        - php5.6-mysql
+        - php5.6-xml
 
     - name: remove apache2
       apt:
@@ -105,7 +105,7 @@
       command: php --version
       register: php_version
     - set_fact:
-        fpm_sock: /run/php/php7.{{ php_version.stdout.split(" ")[1].split(".")[1] }}-fpm.sock
+        fpm_sock: /run/php/php5.{{ php_version.stdout.split(" ")[1].split(".")[1] }}-fpm.sock
       when: ansible_distribution == 'Ubuntu'
 
     - name: create nginx config
