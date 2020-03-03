@@ -127,15 +127,32 @@
         dest: /appli/wikidevops/LIVR
         creates: /appli/wikidevops/LIVR/wiki_devops/maintenance/install.php
 
+    - name: Create project folder
+      file:
+        dest: /var/www/html/wiki
+        state: directory
+
     - name: Create root server folder
       file:
         dest: /appli/projects/md1/nginx
         state: directory
 
-      - name: Copy MediaWiki files
-      command: cp -a /appli/wikidevops/LIVR/wiki_devops/. /appli/projects/md1/nginx
+    - name: Create a symbolic link
+      file:
+        src: /appli/projects/md1/nginx
+        dest: /var/www/html
+        state: link
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Rename symbolic link
+      command: mv /var/www/html/nginx /var/www/html/wiki
+
+    - name: Copy MediaWiki files
+      command: cp -a /appli/wikidevops/LIVR/wiki_devops. /var/www/html/wiki
       args:
-        creates: /appli/projects/md1/nginx/maintenance/install.php
+        creates: /var/www/html/wiki/maintenance/install.php
 
     - name: Create MediaWiki MySQL database
       mysql_db:
@@ -151,7 +168,7 @@
     - name: Create LocalSettings.php
       template:
         src: templates/wiki/LocalSettings.php.jinja
-        dest: /appli/projects/md1/nginx/LocalSettings.php
+        dest: /var/www/html/wiki/LocalSettings.php
 
     - name: Does the database exist?
       command: mysql -u root wiki -e "SELECT ID FROM wiki.users LIMIT 1;"
@@ -161,7 +178,7 @@
     - name: Copy MediaWiki DB
       copy:
         src: files/backup.sql
-        dest: /appli/wikidevops/LIVR/backup.sql
+        dest: appli/wikidevops/LIVR/backup.sql
       when: db_exist.rc > 0
 
     - name: Import MediaWiki DB
