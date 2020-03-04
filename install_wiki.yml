@@ -10,10 +10,11 @@
 # TOOLS
     - name: Install required tools
       apt:
-        name:
+        name: "{{ item }}"
+        state: present
+      loop:
           - unzip
           - gnupg
-        state: present
 
     # PHP
     - name: Add the ondrej PHP PPA
