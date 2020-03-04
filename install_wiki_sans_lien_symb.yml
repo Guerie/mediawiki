@@ -24,10 +24,10 @@
         name: "{{ item }}"
         state: present
       loop:
-        - php
-        - php-fpm
-        - php-mysql
-        - php-xml
+        - php5.6
+        - php5.6-fpm
+        - php5.6-mysql
+        - php5.6-xml
 
     - name: remove apache2
       apt:
@@ -105,7 +105,7 @@
       command: php --version
       register: php_version
     - set_fact:
-        fpm_sock: /run/php/php7.{{ php_version.stdout.split(" ")[1].split(".")[1] }}-fpm.sock
+        fpm_sock: /run/php/php5.{{ php_version.stdout.split(" ")[1].split(".")[1] }}-fpm.sock
       when: ansible_distribution == 'Ubuntu'
 
     - name: create nginx config
@@ -127,32 +127,15 @@
         dest: /appli/wikidevops/LIVR
         creates: /appli/wikidevops/LIVR/wiki_devops/maintenance/install.php
 
-    - name: Create project folder
-      file:
-        dest: /var/www/html/wiki
-        state: directory
-
     - name: Create root server folder
       file:
         dest: /appli/projects/md1/nginx
         state: directory
 
-    - name: Create a symbolic link
-      file:
-        src: /appli/projects/md1/nginx
-        dest: /var/www/html
-        state: link
-        owner: root
-        group: root
-        mode: '0644'
-
-    - name: Rename symbolic link
-      command: mv /var/www/html/nginx /var/www/html/wiki
-
     - name: Copy MediaWiki files
-      command: cp -a /appli/wikidevops/LIVR/wiki_devops. /var/www/html/wiki
+      command: cp -a /appli/wikidevops/LIVR/wiki_devops/. /appli/projects/md1/nginx
       args:
-        creates: /var/www/html/wiki/maintenance/install.php
+        creates: /appli/projects/md1/nginx/maintenance/install.php
 
     - name: Create MediaWiki MySQL database
       mysql_db:
@@ -168,17 +151,17 @@
     - name: Create LocalSettings.php
       template:
         src: templates/wiki/LocalSettings.php.jinja
-        dest: /var/www/html/wiki/LocalSettings.php
+        dest: /appli/projects/md1/nginx/LocalSettings.php
 
     - name: Does the database exist?
-      command: mysql -u root wiki -e "SELECT ID FROM wiki.users LIMIT 1;"
+      command: mysql -u root wiki -e "SELECT ID FROM mysql.users LIMIT 1;"
       register: db_exist
       ignore_errors: true
 
     - name: Copy MediaWiki DB
       copy:
         src: files/backup.sql
-        dest: appli/wikidevops/LIVR/backup.sql
+        dest: /appli/wikidevops/LIVR/backup.sql
       when: db_exist.rc > 0
 
     - name: Import MediaWiki DB
