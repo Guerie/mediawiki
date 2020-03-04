@@ -12,6 +12,7 @@
       apt:
         name:
           - unzip
+          - gnupg
         state: present
 
     # PHP
