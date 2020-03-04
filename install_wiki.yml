@@ -4,7 +4,7 @@
   hosts: group_mediawiki
   become: yes
   tasks:
-    - name: ping_meg_serv
+    - name: ping_MachineCible
       ping:
 
 # TOOLS
@@ -52,7 +52,7 @@
     - name: Generate new root password
       command: openssl rand -hex 7
       args:
-        creates: /root/.my.conf
+        creates: /root/.my.cnf
       register: mysql_new_root_pass
 
     - name: remove anonymous users
@@ -153,6 +153,7 @@
       mysql_db:
         name: wiki
         state: present
+
     - name: Create mediawiki MySQL user
       mysql_user:
         name: wiki
