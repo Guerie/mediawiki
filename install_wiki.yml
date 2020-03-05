@@ -119,8 +119,8 @@
 
     - name: create nginx config
       template:
-        src: templates/nginx/wiki.j2
-        dest: /etc/nginx/sites-available/wiki
+        src: templates/nginx/default.j2
+        dest: /etc/nginx/sites-available/default
       notify: restart nginx
 
   # MediaWiki
