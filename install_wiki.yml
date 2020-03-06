@@ -178,6 +178,27 @@
         name: mediawiki
       when: db_exist.rc > 0
 
+    - name: Copier Donnees.xml dans le répertoire de livraison
+      copy:
+        src: files/Donnees.xml
+        dest: /appli/wikidevops/LIVR
+
+    - name: Import Donnees.xml
+      command: php /appli/projects/md1/nginx/wiki/maintenance/importDump.php < /appli/wikidevops/LIVR/Donnees.xml
+
+    - name: Rebuild recent changes
+      command: php /appli/projects/md1/nginx/wiki/maintenance/rebuildrecentchanges.php
+
+    - name: Unarchive Images
+      unarchive:
+        src: files/dump_image.tar.gz
+        dest: /appli/wikidevops/LIVR
+
+    - name: Import images
+      command: php /appli/projects/md1/nginx/wiki/maintenance/importImages.php /appli/wikidevops/LIVR/images/
+
+
+
   handlers:
     - name: restart nginx
       service:
