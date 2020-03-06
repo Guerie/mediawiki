@@ -138,13 +138,13 @@
 
     - name: Create root server folder
       file:
-        dest: /appli/projects/md1/nginx
+        dest: /appli/projects/md1/nginx/wiki
         state: directory
 
     - name: Copy MediaWiki files
-      command: cp -a /appli/wikidevops/LIVR/wiki_devops/. /appli/projects/md1/nginx
+      command: cp -a /appli/wikidevops/LIVR/wiki_devops/. /appli/projects/md1/nginx/wiki
       args:
-        creates: /appli/projects/md1/nginx/maintenance/install.php
+        creates: /appli/projects/md1/nginx/wiki/maintenance/install.php
 
     - name: Create MediaWiki MySQL database
       mysql_db:
@@ -158,7 +158,7 @@
         priv: wiki.*:ALL
 
     - name: Install php
-      command: php /appli/projects/md1/nginx/maintenance/install.php --dbname=wiki --dbserver=localhost --dbuser=wiki --dbpass=password --lang=fr --pass=password --scriptpath=/wiki "wiki" "wiki"
+      command: php /appli/projects/md1/nginx/wiki/maintenance/install.php --dbname=wiki --dbserver=localhost --dbuser=wiki --dbpass=password --lang=fr --pass=password --scriptpath=/wiki "wiki" "wiki"
 
     - name: Does the database exist?
       command: mysql -u root wiki -e "SELECT ID FROM mysql.users LIMIT 1;"
